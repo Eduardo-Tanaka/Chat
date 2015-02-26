@@ -5,7 +5,7 @@
 
 <div id="altura" style="height:100%">
 
-    <h2>Index</h2>
+    <h2>Chat</h2>
     
     <div style="width:100%; overflow:auto" id="barraRolagem">
         <table>
@@ -35,7 +35,8 @@
         var height = window.innerHeight;
 
         $("#barraRolagem").height(height - 250);
-
+        var c = document.getElementById("barraRolagem");
+        c.scrollTop = c.scrollHeight;
     }, 100);
 
     chat.client.broadcastmessage = function (name, message) {
