@@ -2,29 +2,54 @@
     ViewBag.Title = "Chat";
 }
 
-<h2>Index</h2>
 
-<div>
-    <input type="text" id="message" class="form-control" />
-    <input type="button" id="sendmessage" value="Enviar" class="btn btn-success" />
-    <input type="hidden" id="name" />
-    <ul id="discussao"></ul>
+<div id="altura" style="height:100%">
+
+    <h2>Index</h2>
+    
+    <div style="width:100%; overflow:auto; page-break-after:auto" id="barraRolagem">
+        <table>
+            <tbody id="discussao"></tbody>
+        </table>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+            @Html.Label("Mensagem")
+            <input type="text" class="form-control" id="message" />
+        </div>
+        <input type="button" id="sendmessage" value="Enviar" class="btn btn-success" />
+        <input type="hidden" id="name" />
+    </div>
+
+    
+    
+
 </div>
 
 <script type="text/javascript">
-    $(function () {
+    $().ready(function () {
         var chat = $.connection.chatHub;
+
+        var height = window.innerHeight;
+        alert(height);
+        $("#barraRolagem").height(height - 300);
+
+        $("#name").val(prompt("Nome: ", ''));
+
         chat.client.broadcastmessage = function (name, message) {
             var encodeName = $('<div />').text(name).html();
             var encodeMsg = $('<div />').text(message).html();
-            $("#discussao").append('<li><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</li>');
+            $("#discussao").append('<tr><td><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</td></tr>');
+            var c = document.getElementById("barraRolagem");
+            c.scrollTop = c.scrollHeight;
         };
-        $("#name").val(prompt("Nome: ", ''));
+     
         $("#message").focus();
         $.connection.hub.start().done(function () {
             $("#sendmessage").click(function () {
                 chat.server.send($('#name').val(), $('#message').val());
-                $('#message').val('').focus();
+                $('#message').val('').focus();             
             });
         });
     });
