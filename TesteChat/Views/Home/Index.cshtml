@@ -7,7 +7,7 @@
 
     <h2>Index</h2>
     
-    <div style="width:100%; overflow:auto; page-break-after:auto" id="barraRolagem">
+    <div style="width:100%; overflow:auto" id="barraRolagem">
         <table>
             <tbody id="discussao"></tbody>
         </table>
@@ -41,7 +41,7 @@
     chat.client.broadcastmessage = function (name, message) {
         var encodeName = $('<div />').text(name).html();
         var encodeMsg = $('<div />').text(message).html();
-        $("#discussao").append('<tr><td><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</td></tr>');
+        $("#discussao").append('<tr style="page-break-after:auto"><td><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</td></tr>');
         var c = document.getElementById("barraRolagem");
         c.scrollTop = c.scrollHeight;
     };
