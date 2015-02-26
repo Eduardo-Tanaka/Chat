@@ -1,7 +1,31 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
 
-<h2>ind</h2>
+<h2>Index</h2>
 
+<div>
+    <input type="text" id="message" class="form-control" />
+    <input type="button" id="sendmessage" value="Enviar" class="btn btn-success" />
+    <input type="hidden" id="name" />
+    <ul id="discussao"></ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var chat = $.connection.chatHub;
+        chat.client.broadcastmessage = function (name, message) {
+            var encodeName = $('<div />').text(name).html();
+            var encodeMsg = $('<div />').text(message).html();
+            $("#discussao").append('<li><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</li>');
+        };
+        $("#name").val(prompt("Nome: ", ''));
+        $("#message").focus();
+        $.connection.hub.start().done(function () {
+            $("#sendmessage").click(function () {
+                chat.server.send($('#name').val(), $('#message').val());
+                $('#message').val('').focus();
+            });
+        });
+    });
+</script>
