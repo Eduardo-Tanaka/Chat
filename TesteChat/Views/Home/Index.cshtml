@@ -14,43 +14,44 @@
     </div>
 
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-11">
             @Html.Label("Mensagem")
             <input type="text" class="form-control" id="message" />
         </div>
-        <input type="button" id="sendmessage" value="Enviar" class="btn btn-success" />
-        <input type="hidden" id="name" />
-    </div>
-
-    
-    
+        <div class="form-group col-md-1">
+            <br />
+            <input type="button" id="sendmessage" value="Enviar" class="form-control btn btn-success" />
+            <input type="hidden" id="name" />
+        </div>
+    </div> 
 
 </div>
 
 <script type="text/javascript">
-    $().ready(function () {
-        var chat = $.connection.chatHub;
+    $("#name").val(prompt("Nome: ", ''));
+    var chat = $.connection.chatHub;
 
+    var timer = setInterval(function () {
         var height = window.innerHeight;
-        alert(height);
-        $("#barraRolagem").height(height - 300);
 
-        $("#name").val(prompt("Nome: ", ''));
+        $("#barraRolagem").height(height - 250);
 
-        chat.client.broadcastmessage = function (name, message) {
-            var encodeName = $('<div />').text(name).html();
-            var encodeMsg = $('<div />').text(message).html();
-            $("#discussao").append('<tr><td><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</td></tr>');
-            var c = document.getElementById("barraRolagem");
-            c.scrollTop = c.scrollHeight;
-        };
-     
-        $("#message").focus();
-        $.connection.hub.start().done(function () {
-            $("#sendmessage").click(function () {
-                chat.server.send($('#name').val(), $('#message').val());
-                $('#message').val('').focus();             
-            });
+    }, 100);
+
+    chat.client.broadcastmessage = function (name, message) {
+        var encodeName = $('<div />').text(name).html();
+        var encodeMsg = $('<div />').text(message).html();
+        $("#discussao").append('<tr><td><strong>' + encodeName + '<strong>:&nbsp;&nbsp;' + encodeMsg + '</td></tr>');
+        var c = document.getElementById("barraRolagem");
+        c.scrollTop = c.scrollHeight;
+    };
+
+    $("#message").focus();
+    $.connection.hub.start().done(function () {
+        $("#sendmessage").click(function () {
+            chat.server.send($('#name').val(), $('#message').val());
+            $('#message').val('').focus();
         });
     });
+    
 </script>
